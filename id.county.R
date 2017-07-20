@@ -22,7 +22,9 @@ id.county <- function(value,type){
     # could also do directly from census: https://geocoding.geo.census.gov/geocoder/Geocoding_Services_API.html#_Toc379292356
     geo_reply = geocode(value, output='all', messaging=TRUE, override_limit=TRUE)
     #     county <- geo_reply$results[[1]]$address_components[[5]]$long_name
-    return(c(geo_reply$results[[1]]$geometry$location$lat, geo_reply$results[[1]]$geometry$location$lng))
+    return(c(geo_reply$results[[1]]$geometry$location$lat, 
+             geo_reply$results[[1]]$geometry$location$lng,
+             geo_reply$results[[1]]$address_components[[8]]$long_name))
   }
   else if(type == 'latlong'){
     return(value)
