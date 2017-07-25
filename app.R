@@ -2,8 +2,6 @@
 # Soil organic matter score Shiny app
 # -------------------------------------
 
-#setwd("~/Box Sync/Work/GitHub/soilc-targets")
-
 library(shiny)
 library(soilDB)           # For querying SSURGO and RaCA
 library(sp)               # For defining spatial points
