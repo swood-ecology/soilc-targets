@@ -2,7 +2,7 @@
 # Soil organic matter score Shiny app
 # -------------------------------------
 
-setwd("~/Box Sync/Work/GitHub/soilc-targets")
+#setwd("~/Box Sync/Work/GitHub/soilc-targets")
 
 library(shiny)
 library(soilDB)           # For querying SSURGO and RaCA
@@ -27,7 +27,7 @@ ui <- navbarPage(
           This score is our Soil Health Score."),
     tags$p("If you'd like to learn more about the science behind our approach you can go to: "),
     
-    tags$p(tags$a(href = "http://snappartnership.net/soilc", "SNAPP Soil C Group")),
+    tags$p(tags$a(href = "http://snappartnership.net/groups/managing-soil-carbon/", "SNAPP Soil C Group")),
     tags$p(tags$a(href = "https://github.com/swood-ecology/soilc-targets", "Source code found on GitHub"))
   ),
   
