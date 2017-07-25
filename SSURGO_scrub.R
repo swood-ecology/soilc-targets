@@ -15,10 +15,9 @@ som.score <- function(loc,type.enter,som=1){
     return("Can't calculate other countries yet")
   }
   
-  else if(location[1] == 'United States'){
+  if(location[3] == 'United States'){
     # determine farm location
-    p <- SpatialPoints(cbind(location[2],location[1]), 
-                       proj4string = CRS('+proj=longlat +datum=WGS84'))
+    p <- SpatialPoints(cbind(as.numeric(location[2]),as.numeric(location[1])), proj4string = CRS('+proj=longlat +datum=WGS84'))
     remove(location)
     
     # get mukey info for point
