@@ -2,12 +2,27 @@
 # Soil organic matter score Shiny app
 # -------------------------------------
 
-library(shiny)
-library(soilDB)           # For querying SSURGO and RaCA
-library(sp)               # For defining spatial points
-library(ggmap)            # For interfacing with Google API
-source("id.county.R")     # For converting addresses to latlong
-source("SSURGO_scrub.R")  # Scrub USDA soils based on output from id.county
+## To add
+# 1. Shiny Google Maps integration to allow user to draw AOI for location.
+#    Specifically, take point integrated, draw a map, and give them option to draw AOI
+# 2. In results, generate table of soil series and properties for mukey
+#    To do this, split SSURGO_scrub.R into two files: one that pulls series info
+#    and another that pulls C data
+# 3. Build in way to upload multiple samples for a farm.
+# 4. Build in way to upload other data. 
+#    Could allow upload of whole Cornell soil health report and use for more specific data
+# 5. Build in Jon Sanderman's data as a reference--SoilGrids BD data for <10%OM; otherwise pedo-transfer function
+# 6. Build in SoilGrids buffer approach
+# 7. In results, plot histogram of data and put line corresponding with farm
+# 8. Add line for Sanderman estimate of location
+
+library(shiny)                # For making Shiny app
+library(soilDB)               # For querying SSURGO, KSSL and RaCA
+library(sp)                   # For defining spatial points
+library(ggmap)                # For interfacing with Google API
+library(rgeos)                # For creating buffer area around points
+source("get.location.R")      # For converting addresses to latlong
+source("scoring.functions.R") # Scrub USDA soils based on output from id.county
 
 
 ui <- navbarPage(
@@ -37,11 +52,14 @@ ui <- navbarPage(
       # Get geolocation
       selectInput(inputId = "type",
                   label = "Sample location type",
-                  choices = c("Street address" = "address","Latitude and longitude" = "latlong",
-                              "Zip code" = "zip")),
+                  choices = c("Street address or zipcode" = "address",
+                              "Latitude and longitude" = "latlong")),
       
       textInput("loc", "Enter sample location")  
     ),
+    
+    # TO ADD GOOGLE MAP FOR GENERATION AOI: https://blog.rstudio.com/2015/06/24/leaflet-interactive-web-maps-with-r/
+    # http://rstudio.github.io/leaflet/
     
     tags$br(),
     tags$p("To calculate your soil health score, we need to know your percent soil organic matter. Use the slider below to select the percent soil organic matter associated with your farm."),       
