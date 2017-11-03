@@ -26,22 +26,48 @@ source("scoring.functions.R") # Scrub USDA soils based on output from id.county
 
 
 ui <- navbarPage(
-  title = "Chef's Guide Soil Health Score Calculator",
+  title = "Soil organic carbon targets",
   
   tabPanel(title = "Introduction",
-    tags$h1("A Chef's Guide To Healthy Soil"),
-    tags$p(tags$h2("Soil Health Score Calculator")),
+    tags$h1("Developing local-level soil organic carbon targets"),
     tags$br(),
-    tags$p("Welcome to the Chef's Guide to Healthy Soil soil health score calculator."),
-    tags$p("This Healthy Soil Guide aims to encourage chefs and consumers to reward farmers for using sustainable practices. 
-          Soil organic matter has long been known to be a crucial component of a healthy soil.
-          But just comparing farms based on their soil organic matter contents isn't good enough, because farms differ widely in their natural ability to build up soil organic matter.
-          Because it's unfair to penalize farmers for their natural soil type, we've created a tool that compares a farm's soil organic matter with an esimate of the maximum amount of organic matter that soil could hold.
-          This score is our Soil Health Score."),
-    tags$p("If you'd like to learn more about the science behind our approach you can go to: "),
+    tags$h5("THIS PROJECT IS STILL IN BETA PHASE."), 
+    tags$h5("PLEASE SEND ALL COMMENTS TO STEPHEN.WOOD [AT] TNC.ORG OR FILE AN ISSUE ON ", tags$a(href = "https://github.com/swood-ecology/soilc-targets", "GITHUB")),
+    tags$br(),
+    tags$h3("Background"),
+    tags$br(),
+    tags$p("There is growing interest in the metaphor of soil health as a means to promote the sustainable management 
+          of agriculture. Hand-in-hand with this interest in soil health, there is a growing interest in managing 
+          agricultural lands to build soil carbon, which is one of the main arbiters of healthy soil."),
+
+    tags$p("Organic matter is central to healthy soil because it is the nexus of the physical, chemical, and biological 
+          components of soil. It is connected to the physical because it binds water and creates a porous physical 
+          structure in which plants can thrive. It is connected to the biological because it provides an energy source to 
+          organisms belowground that cannot photosynthesize and derive energy on their own. And it is connected to the 
+          chemical because the breakdown of organic matter releases elements like nitrogen, phosphorus, and micronutrients 
+          that plants require for growth."),
     
-    tags$p(tags$a(href = "http://snappartnership.net/groups/managing-soil-carbon/", "SNAPP Soil C Group")),
-    tags$p(tags$a(href = "https://github.com/swood-ecology/soilc-targets", "Source code found on GitHub"))
+    tags$p("Because of its links to the biological, physical, and chemical components of soil, organic matter is central to
+          many of the human and environmental outcomes associated with agriculture. On the human side, it contributes to crop 
+          yield, yield stability, and the nutritional and flavor composition of food items. On the environmental side, building 
+          up soil organic matter can: reduce erosion of soil minerals into water systems, reduce leaching of soluble nutrients into 
+          water systems; and temporarily remove greenhouse gases from the atmosphere"),
+
+    tags$p("Soil organic matter is also an essential indicator of healthy soils because it is something that we can 
+          increase—and decrease—based on how we manage land. The fact that it is both biophysically important and responsive to 
+          management makes soil organic matter a crucial soil property for management. There is broad consensus that, for row-crop 
+          agriculture, building soil organic matter would benefit soil health."),
+           
+    tags$p("But just comparing lands based on their soil organic matter contents isn't good enough, because farms differ widely in 
+          their natural ability to build up soil organic matter. Because it's unfair to penalize land owners for their natural soil type, 
+          we've created a tool that uses public data to estimate a possible maximum soil carbon level for a particular location. This 
+          number could then be used to normalize soil organic matter levels for comparison amongst farms."),
+    tags$br(),
+    tags$br(),
+    tags$p("This project is part of a Science for Nature and People Partnership working group on soil carbon: "),
+    tags$p(tags$a(href = "https://snappartnership.net/teams/managing-soil-organic-carbon/", "SNAPP Soil C Group")),
+    tags$p("You can find all of the code for this project on GitHub: "),
+    tags$p(tags$a(href = "https://github.com/swood-ecology/soilc-targets", "Source code"))
   ),
   
   tabPanel(title = "Data entry",
@@ -92,8 +118,49 @@ ui <- navbarPage(
            
     # # Make plot of comparison with other soil types
     # plotOutput("hist")  
-  )
+  ),
   
+  tabPanel(title = "Methods",
+    tags$h1("Our approach"),
+    tags$br(),
+    tags$p("Comparing organic matter levels across farms is misleading because different 
+          soils have different innate capacities to store certain types of organic matter. 
+          Soils with high amounts specific surface area--such as clayey soils--generally have much higher levels 
+          of organic matter than soils that are sandy. This is because clay minerals can bind organic matter on their 
+          surfaces and can be assembled into aggregates that protect organic matter. Sand minerals, by contrast, have 
+          very little ability to store organic matter. This is part of the reason why extremely sandy soils—like at the 
+          coast—are not highly productive farmland."),
+    tags$p("Because of these different capacities of different soils to hold carbon, a sandy soil with 2% soil organic matter 
+          would be rich in organic matter; by contrast, a clayey soil with the same amount of organic matter could be considered 
+          degraded. Thus, only scoring farms based on organic matter concentrations would penalize farms based on their address, which is misleading."),
+    tags$h3("Defing the soil organic matter target"),
+    tags$p("Determining what a given soil’s organic matter level could be is challenging. This is challenging because the publicly 
+           available soils data within the United States—and elsewhere in the world—is too coarse in resolution to determine reliably 
+           what a particular farm’s soil type is, without going to that farm and doing intensive sampling. Thus, we have to rely on 
+           best guesses of what a particular soil type likely is, based on sampling elsewhere and knowledge about certain features of 
+           a location, like topography, climate, and vegetation type. But even if we had perfect knowledge of what soil type was present, 
+           we still lack the knowledge necessary of how much organic matter could be achieved for a specific soil type, as discussed above. 
+           To tackle this problem, we adopt three separate approaches, described below."),
+    tags$h4("SSURGO"),
+    tags$p("The United States Department of Agriculture has developed a soil classification system that allows us to name specific soils using 
+          terms that range from general to very specific. This is much like the way that biological species are named by Kingdom, Phylum, Class, 
+          Order, Famiy, Genus, and Species. Soils are classified based on Order, Sub-order, Great group, Group, and Series."),
+    tags$p("In this approach, we use a GPS location for each farm and pass that to the web-based USDA SSURGO data platform. For the GPS location, 
+          we pull information on the soil series present. Since we cannot know with certainty the exact soil series, we instead collect the most 
+          likely series for that particular location. For each soil series in the list, we collect from the same database the maximum soil carbon 
+          level contained at a depth of up to 25 cm for that soil series. Then we estimate soil organic matter from soil carbon based on a scalar 
+          conversion, where soil organic matter is 62% carbon. We then calculate a weighted average of the soil organic matter scores based on the 
+          likelihood of all of the soil series for that location."),
+    tags$p("The advantage of this approach is that it is rooted in a strong, mechanistic hypothesis that soils that are similar—i.e. are of the same 
+           series—should have similar organic matter levels. The downside is that there are so many soil series that soil carbon levels are sparse for 
+           each series and in many cases there are not enough data to calculate a reliable score."),
+    tags$br(),
+    tags$h4("SoilGrids"),
+    tags$p("STILL IN DEVELOPMENT"),
+    tags$br(),
+    tags$h4("Sanderman et al (PNAS 2017)"),
+    tags$p("STILL IN DEVELOPMENT")
+  )
 )
 
 server <- function(input,output) {
