@@ -88,7 +88,7 @@ ui <- navbarPage(
     # http://rstudio.github.io/leaflet/
     
     tags$br(),
-    tags$p("To calculate your soil health score, we need to know your percent soil organic matter. Use the slider below to select the percent soil organic matter associated with your farm."),       
+    tags$p("To calculate your normalized soil carbon score, we need to know your percent soil organic matter. Use the slider below to select the percent soil organic matter associated with your farm."),       
     
     # Get SOM value
     wellPanel(
@@ -97,9 +97,9 @@ ui <- navbarPage(
                   min = 0, max = 30, step = 0.1)  
     ),
            
-    # Calculate soil health score
+    # Calculate normalized soil carbon score
     actionButton(inputId = "go",
-                label = "Calculate soil health score"),
+                label = "Calculate normalized soil carbon score"),
            
     tags$br(),
     tags$br(),
